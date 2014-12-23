@@ -1,0 +1,5 @@
+[package]
+
+name = "file_diff"
+version = "0.0.1"
+authors = ["Ethan Pailes <ethanpailes@gmail.com>"]
