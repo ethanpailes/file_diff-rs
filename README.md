@@ -1,8 +1,8 @@
-File Diff
+# File Diff
 
 This module provides an atomic file diffing function for use in unit tests.
 
-The diff_files() function takes two file handles and determines returns true
+The diff\_files() function takes two file handles and determines returns true
 if they point to identical files.
 
 ```rust
