@@ -3,3 +3,8 @@
 name = "file_diff"
 version = "0.1.0"
 authors = ["Ethan Pailes <ethanpailes@gmail.com>"]
+readme = "README.md"
+repository = "https://github.com/ethanpailes/file_diff-rs"
+homepage = "https://github.com/ethanpailes/file_diff-rs"
+keywords = ["diff", "testing", "test", "unit test", "file"]
+licence = "BSD-3-Clause"
