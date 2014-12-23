@@ -1,4 +1,8 @@
-//TODO(ethan): licence, header, & documentation
+// (c) 2014, Ethan Pailes
+// All Rights Reserved
+//
+// Licensed under the "Revised" BSD 3-clause licence. See LICENCE file at the
+// root directory of this repository.
 
 //! File Diff
 //!

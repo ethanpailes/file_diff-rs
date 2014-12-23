@@ -7,4 +7,7 @@ readme = "README.md"
 repository = "https://github.com/ethanpailes/file_diff-rs"
 homepage = "https://github.com/ethanpailes/file_diff-rs"
 keywords = ["diff", "testing", "test", "unit test", "file"]
-licence = "BSD-3-Clause"
+license = "BSD-3-Clause"
+license-file = "LICENSE"
+description = "An atomic utility for diffing files in testing"
+
