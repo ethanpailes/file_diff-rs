@@ -38,7 +38,7 @@
 
 use std::io::{File, BufferedReader};
 
-/// Takes two file arguments and returns true if the two files are identical
+/// Takes two file arguments and returns true if the two files are identical.
 pub fn diff_files(f1: File, f2: File) -> bool {
     let mut b1 = BufferedReader::new(f1);
     let mut b2 = BufferedReader::new(f2);
@@ -50,7 +50,7 @@ pub fn diff_files(f1: File, f2: File) -> bool {
     true
 }
 
-/// Takes two string filepaths and returns true if the two files are identical and exist
+/// Takes two string filepaths and returns true if the two files are identical and exist.
 #[allow(unused_variables)]
 pub fn diff(f1: &str, f2: &str) -> bool {
     let file1: File = match File::open(&Path::new(f1)) {
