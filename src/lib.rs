@@ -13,7 +13,7 @@
 //!
 //! ```
 //! use file_diff::{diff_files};
-//! use std::io::{File};
+//! use std::old_io::{File};
 //!
 //! let mut file1 = match File::open(&Path::new("./src/lib.rs")) {
 //!     Ok(f) => f,
@@ -36,7 +36,11 @@
 //! diff("./src/lib.rs", "./src/lib.rs");
 //! ```
 
-use std::io::{File, BufferedReader};
+
+
+#![feature(io)]
+#![feature(path)]
+use std::old_io::{File, BufferedReader};
 
 /// Takes two file arguments and returns true if the two files are identical.
 pub fn diff_files(f1: File, f2: File) -> bool {
