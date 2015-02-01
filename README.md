@@ -7,7 +7,7 @@ if they point to identical files.
 
 ```rust
 use file_diff::{diff_files};
-use std::io::{File};
+use std::old_io::{File};
 
 let mut file1 = match File::open(&Path::new("./src/lib.rs")) {
     Ok(f) => f,
