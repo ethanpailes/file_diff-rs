@@ -13,18 +13,18 @@
 //!
 //! ```
 //! use file_diff::{diff_files};
-//! use std::old_io::{File};
+//! use std::fs::{File};
 //!
-//! let mut file1 = match File::open(&Path::new("./src/lib.rs")) {
+//! let mut file1 = match File::open("./src/lib.rs") {
 //!     Ok(f) => f,
 //!     Err(e) => panic!("{}", e),
 //! };
-//! let mut file2 = match File::open(&Path::new("./src/lib.rs")) {
+//! let mut file2 = match File::open("./src/lib.rs") {
 //!     Ok(f) => f,
 //!     Err(e) => panic!("{}", e),
 //! };
 //!
-//! diff_files(file1, file2);
+//! diff_files(&mut file1, &mut file2);
 //! ```
 //!
 //! The diff() function takes string representations of the files and returns true
@@ -36,36 +36,37 @@
 //! diff("./src/lib.rs", "./src/lib.rs");
 //! ```
 
+use std::io::Read;
 
 
-#![feature(io)]
-#![feature(path)]
-use std::old_io::{File, BufferedReader};
+
+use std::fs::{File};
 
 /// Takes two file arguments and returns true if the two files are identical.
-pub fn diff_files(f1: File, f2: File) -> bool {
-    let mut b1 = BufferedReader::new(f1);
-    let mut b2 = BufferedReader::new(f2);
+pub fn diff_files(f1: &mut File, f2: &mut File) -> bool {
+    let mut v1 = Vec::new();
+    let mut v2 = Vec::new();
 
-    for l1 in b1.lines() {
-        let l2 = b2.read_line();
-        if l1 != l2 { return false; }
+    match f1.read_to_end(&mut v1) {
+        Err(_) => false
+      , Ok(b1) => match f2.read_to_end(&mut v2) {
+            Err(_) => false 
+          , Ok(b2) => b1 == b2
+        }
     }
-    true
 }
 
 /// Takes two string filepaths and returns true if the two files are identical and exist.
-#[allow(unused_variables)]
 pub fn diff(f1: &str, f2: &str) -> bool {
-    let file1: File = match File::open(&Path::new(f1)) {
+    let mut file1: File = match File::open(f1) {
         Ok(f) => f,
-        Err(e) => return false,
+        Err(_) => return false,
     };
-    let file2: File = match File::open(&Path::new(f2)) {
+    let mut file2: File = match File::open(&f2) {
         Ok(f) => f,
-        Err(e) => return false,
+        Err(_) => return false,
     };
-    diff_files(file1, file2)
+    diff_files(&mut file1, &mut file2)
 }
 
 #[cfg(test)]
@@ -78,15 +79,17 @@ mod tests {
 
     #[test]
     fn diff_the_same_text_file() { assert!(super::diff(LIB_RS, LIB_RS)); }
+
     #[test]
     fn diff_the_same_binary_file() { assert!(super::diff(RUST_BIN_FILE, RUST_BIN_FILE)); }
+
     #[test]
     fn diff_identical_binary_files() { assert!(super::diff(C_BIN_FILE, C_BIN_FILE_COPY)); }
+
     #[test]
-    #[should_fail]
-    fn diff_different_text_files() { assert!(super::diff(LIB_RS, CARGO_FILE)); }
+    fn diff_different_text_files() { assert!( !super::diff(LIB_RS, CARGO_FILE)); }
+
     #[test]
-    #[should_fail]
-    fn diff_different_binary_files() { assert!(super::diff(RUST_BIN_FILE, C_BIN_FILE)); }
+    fn diff_different_binary_files() { assert!( !super::diff(RUST_BIN_FILE, C_BIN_FILE)); }
 }
 
