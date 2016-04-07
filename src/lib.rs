@@ -42,31 +42,43 @@ use std::io::Read;
 
 use std::fs::{File};
 
+
 /// Takes two file arguments and returns true if the two files are identical.
 pub fn diff_files(f1: &mut File, f2: &mut File) -> bool {
-    let mut v1 = Vec::new();
-    let mut v2 = Vec::new();
 
-    match f1.read_to_end(&mut v1) {
-        Err(_) => false
-      , Ok(b1) => match f2.read_to_end(&mut v2) {
-            Err(_) => false 
-          , Ok(b2) => b1 == b2
+    let mut buff1 : &mut [u8] = &mut [0; 1024];
+    let mut buff2 : &mut [u8] = &mut [0; 1024];
+    
+    loop {
+
+        match f1.read(buff1) {
+            Err(_) => return false,
+            Ok(f1_read_len) => match f2.read(buff2) {
+                Err(_) => return false,
+                Ok(f2_read_len) => {
+                    if f1_read_len != f2_read_len {
+                        return false;
+                    }
+                    if f1_read_len == 0 {
+                        return true;
+                    }
+                    if &buff1[0..f1_read_len] != &buff2[0..f2_read_len] {
+                        return false;
+                    }
+                }
+            }
         }
     }
 }
 
 /// Takes two string filepaths and returns true if the two files are identical and exist.
 pub fn diff(f1: &str, f2: &str) -> bool {
-    let mut file1: File = match File::open(f1) {
-        Ok(f) => f,
-        Err(_) => return false,
-    };
-    let mut file2: File = match File::open(&f2) {
-        Ok(f) => f,
-        Err(_) => return false,
-    };
-    diff_files(&mut file1, &mut file2)
+    let mut fh1 = File::open(f1);
+    let mut fh2 = File::open(f2);
+
+    fh1.as_mut().and_then(|file1|
+        fh2.as_mut().and_then(|file2|
+            Ok(diff_files(file1, file2)))).unwrap_or(false)
 }
 
 #[cfg(test)]
