@@ -7,18 +7,18 @@ if they point to identical files.
 
 ```rust
 use file_diff::{diff_files};
-use std::old_io::{File};
+use std::fs::{File};
 
-let mut file1 = match File::open(&Path::new("./src/lib.rs")) {
+let mut file1 = match File::open("./src/lib.rs") {
     Ok(f) => f,
     Err(e) => panic!("{}", e),
 };
-let mut file2 = match File::open(&Path::new("./src/lib.rs")) {
+let mut file2 = match File::open("./src/lib.rs") {
     Ok(f) => f,
     Err(e) => panic!("{}", e),
 };
 
-diff_files(file1, file2); // true
+diff_files(&mut file1, &mut file2);
 ```
 
 The diff() function takes string representations of the files and returns true
